@@ -57,9 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h1>Sistema Pet Shop - LOGIN</h1>
 
     <?php
-    if (!empty($mensagemErro))
+    if (!empty($mensagemErro)) {
+        echo $mensagemErro;
+    }
     ?>
-    
+
     <form action="" method="post">
         <div>
             <label for="email">Email:</label>

@@ -13,8 +13,24 @@ try {
     die("Erro na conexão: " . $e->getMessage());
 }
 
-function iniciarSessao()  {
+function iniciarSessao() {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
+    } 
+}
+
+function verificarLogin() {
+    iniciarSessao();
+    if (!isset($_SESSION['usuario_id'])) {
+        header('Location: login.php');
+        exit;
     }
+}
+
+function fazerLogout() {
+    iniciarSessao();
+    session_unset();
+    session_destroy();
+    header('Location: login.php');
+    exit;
 }
