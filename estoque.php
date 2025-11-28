@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             // Buscar estoque atual
-            $sql = "SELECT estoque_atual, nome FROM produtos WHERE id = :id";
+            $sql = "SELECT * FROM produtos WHERE id = :id";
             $stmt = $conn->prepare($sql);
             $stmt->execute(['id' => $produto_id]);
             $produto = $stmt->fetch();
@@ -67,6 +67,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $conn->commit();
                     $mensagem = 'Movimentação registrada com sucesso!';
                     $tipoMensagem = 'sucesso';
+
+                    //verificar se estoque está abaixo do minimo
+                    if ($tipo === 'SAIDA' && $estoque_novo <= $produto['estoque_minimo']) {
+                        $alertaEstoque = 'ALERTA DE ESTOQUE BAIXO! O produto {$produto["nome"]} está com estoque BAIXO! Estoque atual = {$estoque_novo} Estoque mínimo = {$produto[$estoque_minimo]}". ';
+                    }
                 }
             }
         } catch (PDOException $e) {
@@ -104,6 +109,13 @@ $produtos = $conn->query($sql)->fetchAll();
 
     <?php if (!empty($mensagem)): ?>
         <p style="color: <?php echo $tipoMensagem == 'sucesso' ? 'green' : 'red'; ?>">
+            <?php echo $mensagem ?>
+        </p>
+        <hr>
+    <?php endif; ?>
+
+    <?php if (!empty($alertaEstoque)): ?>
+        <p style="color: red">
             <?php echo $mensagem ?>
         </p>
         <hr>
