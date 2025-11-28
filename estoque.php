@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     //verificar se estoque está abaixo do minimo
                     if ($tipo === 'SAIDA' && $estoque_novo <= $produto['estoque_minimo']) {
-                        $alertaEstoque = 'ALERTA DE ESTOQUE BAIXO! O produto {$produto["nome"]} está com estoque BAIXO! Estoque atual = {$estoque_novo} Estoque mínimo = {$produto[$estoque_minimo]}". ';
+                        $alertaEstoque = "ALERTA DE ESTOQUE BAIXO! O produto {$produto['nome']} estoque atual = {$estoque_novo}. Estoque mínimo = {$produto['estoque_minimo']}.";
                     }
                 }
             }

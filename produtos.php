@@ -87,12 +87,25 @@ if (isset($_GET['editar'])) {
 }
 
 // Listar Produtos
-$sql = "SELECT p.*, c.nome as categoria
+$busca = $_GET['busca'] ?? '';
+
+if (!empty($busca)) {
+    $sql = "SELECT p.*, c.nome as categoria
+       FROM produtos p
+       INNER JOIN categorias c ON p.categoria_id = c.id
+       WHERE p.ativo = 1 AND (p.nome LIKE :busca OR p.codigo LIKE :busca)
+       ORDER BY p.nome";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute(['busca' => "%$busca%"]);
+    $produtos = $stmt->fetchAll();
+} else {
+    $sql = "SELECT p.*, c.nome as categoria
        FROM produtos p
        INNER JOIN categorias c ON p.categoria_id = c.id
        WHERE p.ativo = 1
        ORDER BY p.nome";
-$produtos = $conn->query($sql)->fetchALL();
+    $produtos = $conn->query($sql)->fetchALL();
+}
 ?>
 
 <!DOCTYPE html>
@@ -173,6 +186,17 @@ $produtos = $conn->query($sql)->fetchALL();
     <hr>
 
     <h2>Lista de Produtos</h2>
+
+    <form action="" method="get">
+        <label>Buscar</label>
+        <input type="text" name="busca" value="<?php echo $busca; ?>" placeholder="Nome ou Código...">
+        <button type="submit">Buscar</button>
+        <?php if (!empty($busca)): ?>
+            <a href="produtos.php">Limpar</a>
+        <?php endif; ?>
+    </form>
+    <br>
+
     <?php if (count($produtos) > 0): ?>
         <table border="1">
             <tr>

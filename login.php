@@ -14,7 +14,7 @@ $mensagemErro = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $senha = $_POST['senha'] ?? '';
-    
+
     if (empty($email) || empty($senha)) {
         $mensagemErro = 'Por favor, preencha todos os campos!';
     } else {
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $conn->prepare($sql);
             $stmt->execute(['email' => $email]);
             $usuario = $stmt->fetch();
-            
+
             if (!$usuario) {
                 $mensagemErro = 'Email ou senha incorretos!';
             } elseif ($usuario['ativo'] != 1) {
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $mensagemErro = 'Email ou senha incorretos!';
             }
-            
+
         } catch (PDOException $e) {
             $mensagemErro = 'Erro ao processar login: ' . $e->getMessage();
         }
@@ -48,11 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Pet Shop</title>
 </head>
+
 <body>
     <h1>Sistema Pet Shop - LOGIN</h1>
 
@@ -76,4 +78,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Entrar</button>
     </form>
 </body>
+
 </html>
